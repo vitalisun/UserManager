@@ -17,23 +17,23 @@ namespace UserManager.DAL.Repository.Implementation
 
         public async Task<UserInfo> GetById(int id)
         {
-            return await _context.UserInfo.SingleOrDefaultAsync(u => u.ID == id);
+            return await _context.UserInfos.SingleOrDefaultAsync(u => u.ID == id);
         }
 
         public async Task<List<UserInfo>> GetUsersAsync()
         {
-            return await _context.UserInfo.ToListAsync();
+            return await _context.UserInfos.AsNoTracking().ToListAsync();
         }
 
         public async Task InsertAsync(UserInfo userInfo)
         {
-            await _context.UserInfo.AddAsync(userInfo);
+            await _context.UserInfos.AddAsync(userInfo);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(UserInfo userInfo)
         {
-            _context.UserInfo.Remove(userInfo);
+            _context.UserInfos.Remove(userInfo);
             await _context.SaveChangesAsync();
         }
 
