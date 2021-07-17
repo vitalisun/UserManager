@@ -29,6 +29,9 @@ namespace UserManager.BL.Services.Implementations
 
         public async Task<Response> CreateUserAsync(UserInfo userInfo)
         {
+            if (userInfo == null)
+                throw new ArgumentNullException("CreateUserAsync method got null argument");
+
             var dbEnity = await _userInfoRepository.GetById(userInfo.ID);
 
             if (dbEnity != null)
@@ -51,6 +54,9 @@ namespace UserManager.BL.Services.Implementations
 
         public async Task<RemoveUserResponse> RemoveUserAsync(RemoveUserRequest removeUserRequest)
         {
+            if (removeUserRequest == null)
+                throw new ArgumentNullException("RemoveUserAsync method got null argument");
+
             var dbEnity = await _userInfoRepository.GetById(removeUserRequest.RemoveUser.Id);
 
             if (dbEnity == null)
@@ -73,10 +79,12 @@ namespace UserManager.BL.Services.Implementations
 
         public async Task<SetStatusResponse> SetStatusAsync(SetStatusRequest setStatusRequest)
         {
+            if (setStatusRequest == null)
+                throw new ArgumentNullException("SetStatusAsync method got null argument");
+
             int id;
             if (Int32.TryParse(setStatusRequest.Id, out id) == false)
                 throw new ArgumentException("User id is not numeric value");
-
 
             var dbEnity = await _userInfoRepository.GetById(id);
 
