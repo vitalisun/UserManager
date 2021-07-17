@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UserManager.BL.Services;
 using UserManager.DAL.Entities;
 
@@ -21,18 +20,10 @@ namespace UserManager.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserInfo(int Id)
+        public IActionResult UserInfo(int Id)
         {
-            UserInfo user;
-
-            user = Globals.Users.Find(u => u.ID == Id);
-
-            if (user == null)
-            {
-                user = await _userInfoService.GetUserInfo(Id);
-            }
-
-            return View(user);
+            ViewBag.Id = Id;
+            return base.View(Globals.Users.Find(u => u.ID == Id));
         }
 
         [HttpGet]

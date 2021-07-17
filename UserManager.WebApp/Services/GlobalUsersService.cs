@@ -40,7 +40,7 @@ namespace UserManager.WebApp.Services
 
                     _logger.LogInformation("UsersCollection was updated");
 
-                    await Task.Delay(TimeSpan.FromSeconds(60));
+                    await Task.Delay(TimeSpan.FromMinutes(10));
                 }
             }
 
