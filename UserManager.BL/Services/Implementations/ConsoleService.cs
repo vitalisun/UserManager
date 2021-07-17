@@ -15,7 +15,7 @@ namespace UserManager.BL.Services.Implementations
 {
     public class ConsoleService
     {
-        const string url = @"https://localhost:44323";
+        const string url = @"https://localhost:5001";
 
         public UserCredentials UserCredentials;
 
@@ -29,11 +29,11 @@ namespace UserManager.BL.Services.Implementations
             if (string.IsNullOrEmpty(UserCredentials.Login) ||
                 string.IsNullOrEmpty(UserCredentials.Password))
             {
-                Console.WriteLine("Необходима авторизация");
+                Console.WriteLine("Необходима авторизация\n");
 
                 Console.WriteLine("Введите логин:");
                 UserCredentials.Login = Console.ReadLine();
-
+                Console.WriteLine();
                 Console.WriteLine("Введите пароль:");
                 UserCredentials.Password = Console.ReadLine();
             }
@@ -45,7 +45,7 @@ namespace UserManager.BL.Services.Implementations
             UserCredentials.Password = String.Empty;
         }
 
-        public async Task<string> CreateUserRequestAsync(UserInfo userInfo)
+        public async Task<(string, HttpStatusCode)> CreateUserRequestAsync(UserInfo userInfo)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(UserInfo));
 
@@ -68,10 +68,10 @@ namespace UserManager.BL.Services.Implementations
 
             var content = await response.Content.ReadAsStringAsync();
 
-            return content;
+            return (content, response.StatusCode);
         }
 
-        public async Task<string> RemoveUserRequestAsync(int id)
+        public async Task<(string, HttpStatusCode)> RemoveUserRequestAsync(int id)
         {
             RemoveUserRequest request = new RemoveUserRequest { RemoveUser = new RemoveUser { Id = id } };
 
@@ -91,10 +91,10 @@ namespace UserManager.BL.Services.Implementations
 
             var content = await response.Content.ReadAsStringAsync();
 
-            return content;
+            return (content, response.StatusCode);
         }
 
-        public async Task<string> SetStatusRequest(string id, string status)
+        public async Task<(string, HttpStatusCode)> SetStatusRequest(string id, string status)
         {
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -114,7 +114,7 @@ namespace UserManager.BL.Services.Implementations
 
             var content = await response.Content.ReadAsStringAsync();
 
-            return content;
+            return (content, response.StatusCode);
         }
 
         public async Task<string> UserInfoRequest(int id)
@@ -122,9 +122,6 @@ namespace UserManager.BL.Services.Implementations
             var httpClient = new HttpClient();
 
             var response = await httpClient.GetAsync($"{url}/Public/UserInfo?id={id}");
-
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-                Logout();
 
             var content = await response.Content.ReadAsStringAsync();
 
@@ -136,9 +133,6 @@ namespace UserManager.BL.Services.Implementations
             var httpClient = new HttpClient();
 
             var response = await httpClient.GetAsync($"{url}/Public/GetUsers");
-
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-                Logout();
 
             var content = await response.Content.ReadAsStringAsync();
 

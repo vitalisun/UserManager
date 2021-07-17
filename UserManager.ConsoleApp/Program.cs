@@ -18,14 +18,33 @@ namespace UserManager.ConsoleApp
 
         private static async Task UserManagerConsole(ConsoleService consoleService)
         {
+            var _commands = new List<string> {
+                "get users",
+                "create user",
+                "remove user",
+                "set status",
+                "user info",
+                "sign in",
+                "sign out",
+                "exit",
+                "help"
+            };
+
             DisplayHelp();
 
             string input = "";
 
             while (input.Equals("exit", StringComparison.OrdinalIgnoreCase) != true)
             {
+                Console.WriteLine();
                 Console.WriteLine("Введите команду:");
                 input = Console.ReadLine();
+                while (_commands.Contains(input) == false)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Ошибка ввода - для получения списка команд введите 'help'");
+                    input = Console.ReadLine();
+                }
                 Console.WriteLine();
 
                 switch (input)
@@ -40,7 +59,6 @@ namespace UserManager.ConsoleApp
                         {
                             Console.WriteLine($"{u.ID}.{u.Name} - {u.Status}");
                         }
-                        Console.WriteLine();
                         break;
 
                     case "create user":
@@ -91,6 +109,9 @@ namespace UserManager.ConsoleApp
             {
                 Console.WriteLine("Ошибка - введите число");
                 userIdStr = Console.ReadLine();
+
+                if (userIdStr == "back")
+                    return;
             }
 
             Console.WriteLine("Enter user name:");
@@ -103,8 +124,13 @@ namespace UserManager.ConsoleApp
                 Status = Core.Enums.UserStatusEnum.New
             });
 
-            Console.WriteLine($"Result: \n {content}");
-            Console.WriteLine();
+            Console.WriteLine($"Result: \n {content.Item1}");
+
+            if (content.Item2 == System.Net.HttpStatusCode.Unauthorized)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ошибка авторизации - для авторизации введите команду 'sign in'");
+            }
         }
 
         private static async Task RemoveUser(ConsoleService consoleService)
@@ -119,12 +145,20 @@ namespace UserManager.ConsoleApp
             {
                 Console.WriteLine("Ошибка - введите число");
                 userIdStr = Console.ReadLine();
+
+                if (userIdStr == "back")
+                    return;
             }
 
             var content = await consoleService.RemoveUserRequestAsync(userId);
 
-            Console.WriteLine($"Result: \n {content}");
-            Console.WriteLine();
+            Console.WriteLine($"Result: \n {content.Item1}");
+
+            if (content.Item2 == System.Net.HttpStatusCode.Unauthorized)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ошибка авторизации - для авторизации введите команду 'sign in'");
+            }
         }
 
         private static async Task SetStatus(ConsoleService consoleService)
@@ -133,6 +167,16 @@ namespace UserManager.ConsoleApp
 
             Console.WriteLine("Введите Id пользователя:");
             string userIdStr = Console.ReadLine();
+            int userId;
+
+            while (Int32.TryParse(userIdStr, out userId) == false)
+            {
+                Console.WriteLine("Ошибка - введите число");
+                userIdStr = Console.ReadLine();
+
+                if (userIdStr == "back")
+                    return;
+            }
 
             Console.WriteLine("Введите новый статус пользователя (New, Active, Blocked, Deleted):");
             string newStatus = Console.ReadLine();
@@ -145,8 +189,13 @@ namespace UserManager.ConsoleApp
 
             var content = await consoleService.SetStatusRequest(userIdStr, newStatus);
 
-            Console.WriteLine($"Result: \n {content}");
-            Console.WriteLine();
+            Console.WriteLine($"Result: \n {content.Item1}");
+
+            if (content.Item2 == System.Net.HttpStatusCode.Unauthorized)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ошибка авторизации - для авторизации введите команду 'sign in'");
+            }
         }
 
         private static async Task UserInfo(ConsoleService consoleService)
@@ -170,8 +219,7 @@ namespace UserManager.ConsoleApp
 
         private static void DisplayHelp()
         {
-            Console.WriteLine(@"
-*** Общее описание ***
+            Console.WriteLine(@"*** Общее описание ***
 
 Консольное приложение позволяет запрашивать и изменять данные о пользователях, используя 
 запросы к веб апи. 
@@ -183,16 +231,14 @@ namespace UserManager.ConsoleApp
        
 *** Список доступных команд и их описание:  ***
 
-create-user - добавить пользователя в базу данных
+create user - добавить пользователя в базу данных
 remove user - удалить пользователя из базы данных
 set status - изменить статус пользователя и сохранить изменение в базе данных
 user info - вывести информацию о пользователе
 sign in - авторизоваться
 sign out - разлогиниться
 exit - завершить работу приложения
-help - вызвать справку
-
-");
+help - вызвать справку");
         }
 
 
