@@ -28,7 +28,7 @@ namespace UserManager.WebApp
 
             services.AddScoped<IUserInfoRepository, UserInfoRepository>();
             services.AddScoped<IUserInfoService, UserInfoService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBasicAuthService, BasicAuthService>();
 
             services.AddDbContext<ApplicationContext>();
 

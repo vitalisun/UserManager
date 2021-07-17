@@ -54,8 +54,8 @@ namespace UserManager.Core.Infrastructure.BasicAuth
 
         public bool IsAuthorized(AuthorizationFilterContext context, string username, string password)
         {
-            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-            return userService.IsValidUser(username, password);
+            var basicAuthService = context.HttpContext.RequestServices.GetRequiredService<IBasicAuthService>();
+            return basicAuthService.IsValidUser(username, password);
         }
 
         private void ReturnUnauthorizedResult(AuthorizationFilterContext context)

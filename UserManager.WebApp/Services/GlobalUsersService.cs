@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using UserManager.DAL.Entities;
 using UserManager.DAL.Repository;
 
 namespace UserManager.WebApp.Services
@@ -37,15 +36,11 @@ namespace UserManager.WebApp.Services
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    GlobalUsers.UsersCollection = await userInfoRepository.GetUsersAsync();
+                    Globals.Users = await userInfoRepository.GetUsersAsync();
 
-                    foreach (UserInfo u in GlobalUsers.UsersCollection)
-                    {
-                        _logger.LogInformation($"{u.ID}.{u.Name} - {u.Status}");
-                    }
-                    _logger.LogInformation("***");
+                    _logger.LogInformation("UsersCollection was updated");
 
-                    await Task.Delay(TimeSpan.FromSeconds(2));
+                    await Task.Delay(TimeSpan.FromSeconds(60));
                 }
             }
 

@@ -18,8 +18,6 @@ namespace UserManager.WebApp.Controllers
         {
             _logger = logger;
             _userInfoService = userInfoService;
-
-            System.Console.WriteLine(GlobalUsers.UsersCollection);
         }
 
         [HttpGet]
@@ -27,19 +25,7 @@ namespace UserManager.WebApp.Controllers
         {
             UserInfo user;
 
-            List<UserInfo> users = new List<UserInfo>();
-
-            foreach (var item in GlobalUsers.UsersCollection)
-            {
-                users.Add(new DAL.Entities.UserInfo
-                {
-                    ID = item.ID,
-                    Name = item.Name,
-                    Status = item.Status
-                });
-            }
-
-            user = users.Find(u => u.ID == Id);
+            user = Globals.Users.Find(u => u.ID == Id);
 
             if (user == null)
             {
@@ -52,19 +38,7 @@ namespace UserManager.WebApp.Controllers
         [HttpGet]
         public List<UserInfo> GetUsers()
         {
-            List<UserInfo> users = new List<UserInfo>();
-
-            foreach (var item in GlobalUsers.UsersCollection)
-            {
-                users.Add(new DAL.Entities.UserInfo
-                {
-                    ID = item.ID,
-                    Name = item.Name,
-                    Status = item.Status
-                });
-            }
-
-            return users;
+            return Globals.Users;
         }
     }
 }

@@ -3,17 +3,17 @@ using Microsoft.Extensions.Logging;
 
 namespace UserManager.WebApp.Services
 {
-    public interface IUserService
+    public interface IBasicAuthService
     {
         bool IsValidUser(string userName, string password);
     }
 
-    public class UserService : IUserService
+    public class BasicAuthService : IBasicAuthService
     {
-        private readonly ILogger<UserService> _logger;
+        private readonly ILogger<BasicAuthService> _logger;
         private readonly IConfiguration _configuration;
 
-        public UserService(ILogger<UserService> logger, IConfiguration configuration)
+        public BasicAuthService(ILogger<BasicAuthService> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
