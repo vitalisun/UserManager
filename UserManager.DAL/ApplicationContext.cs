@@ -6,7 +6,7 @@ namespace UserManager.DAL
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<UserInfo> UserInfo { get; set; }
+        public DbSet<UserInfo> UserInfos { get; set; }
 
         public ApplicationContext()
         {
